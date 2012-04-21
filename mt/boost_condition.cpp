@@ -47,14 +47,14 @@ public:
   }
 
   int get() {
-    scoped_lock lk(mutex);
+    scoped_lock lock(mutex);
     if (full == 0) {
       {
         boost::mutex::scoped_lock lock(io_mutex);
         std::cout << "Buffer is empty. Waiting..." << std::endl;
       }
       while (full == 0)
-        cond.wait(lk);
+        cond.wait(lock);
     }
     int i = buf[c];
     c = (c+1) % BUF_SIZE;
@@ -105,6 +105,5 @@ int main(int argc, char* argv[]) {
   boost::thread thrd2(&writer);
   thrd1.join();
   thrd2.join();
-  return 0;
 }
 
