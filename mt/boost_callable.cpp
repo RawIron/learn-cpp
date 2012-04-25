@@ -4,7 +4,7 @@
 
 class CallableClass {
 public:
-    CallableClass(int first) : state_(first) {}
+    explicit CallableClass(int first) : state_(first) {}
     void operator()() {
         state_ += 4;
         std::cout << state();
