@@ -34,7 +34,7 @@ public:
     scoped_lock lock(mutex);
     if (full == BUF_SIZE) {
       {
-        boost::mutex::scoped_lock lock(io_mutex);
+        scoped_lock lock(io_mutex);
         std::cout << "Buffer is full. Waiting..." << std::endl;
       }
       while (full == BUF_SIZE)

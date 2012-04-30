@@ -14,5 +14,8 @@ boost_mutex2:	boost_mutex2.cpp
 boost_condition:	boost_condition.cpp
 	g++ -o boost_condition boost_condition.cpp /usr/lib/libboost_thread.a -lpthread
 
+wallet:	wallet.cpp
+	g++ -o wallet wallet.cpp /usr/lib/libboost_thread.a -lpthread
+
 clean:
 	rm -f *.o boost_mutex boost_mutex2 boost_test boost_callable boost_condition boost_class
