@@ -34,14 +34,14 @@ private:
 
 class WalletEvent {
 public:
-    virtual void give(Wallet*) = 0;
+    virtual void provide(Wallet*) = 0;
     virtual void execute() = 0;
 };
 
 class WalletWithdrawEvent : public WalletEvent {
 public:
     WalletWithdrawEvent(int requested): amount(requested), w(new Wallet()) {}
-    void give(Wallet *use) { w = use; }
+    void provide(Wallet *use) { w = use; }
     void execute() { w->withdraw(amount); }
 private:
     int amount;
@@ -51,7 +51,7 @@ private:
 class WalletDepositEvent : public WalletEvent {
 public:
     WalletDepositEvent(int requested): amount(requested), w(new Wallet()) {}
-    void give(Wallet *use) { w = use; }
+    void provide(Wallet *use) { w = use; }
     void execute() { w->deposit(amount); }
 private:
     int amount;
@@ -64,12 +64,12 @@ public:
     Worker() : w(), active(false), t(0) {}
     void operator()() { work(); }
 
-    void give(WalletEvent *e) {
+    void sent(WalletEvent *e) {
         boost::mutex::scoped_lock lock(mx);
         events.push(e);
         condition.notify_one();
     }
-    void control(ControlEvent *c) {
+    void sent(ControlEvent *c) {
         boost::mutex::scoped_lock lock(mx);
         controls.push(c);
         condition.notify_one();
@@ -92,23 +92,23 @@ private:
                 condition.wait(lock);
             }
             if (!events.empty()) {
-                WalletEvent *e = popEvent();
-                e->give(&w);
+                WalletEvent *e = receiveEvent();
+                e->provide(&w);
                 e->execute();
             } else if (!controls.empty()) {
-                ControlEvent *c = popControl();
+                ControlEvent *c = receiveControl();
                 if (c->isStopped()) {
                     break;
                 }
             }
         }
     }
-    WalletEvent* popEvent() {
+    WalletEvent* receiveEvent() {
         WalletEvent *e = events.front();
         events.pop();
         return e;
     }
-    ControlEvent* popControl() {
+    ControlEvent* receiveControl() {
         ControlEvent *c = controls.front();
         controls.pop();
         return c;
@@ -132,11 +132,11 @@ int main() {
     c1.shutdown();
 
     t.run();
-    t.give(&w1);
-    t.give(&w2);
-    t.give(&d1);
-    t.give(&d2);
-    t.control(&c1);
+    t.sent(&w1);
+    t.sent(&w2);
+    t.sent(&d1);
+    t.sent(&d2);
+    t.sent(&c1);
     t.stop();
     std::cout << t.balance();
 }
