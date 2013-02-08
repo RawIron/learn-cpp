@@ -20,6 +20,6 @@ double add_f(double p) {
 int main() {
     double a;
     a = add_f(100.5);
-    std::cout << a <<std::endl;
+    std::cout << a << std::endl;
 }
 
