@@ -84,6 +84,7 @@ public:
         t->join();
     }
     void force() {}
+
 private:
     void work() {
         while(true) {
