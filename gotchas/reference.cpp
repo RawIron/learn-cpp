@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <assert.h>
 using std::cout;
 using std::endl;
 
@@ -14,19 +15,6 @@ private:
     TYPE stored;
 };
 
-
-void h(void) {
-    int *o = new int(3);
-    int* &a = o;
-    *o=4;
-    cout << *a <<endl;
-}
-
-int f(int &no) {
-    return --no;
-}
-
-
 void refBy(holder<int &> &s) {
     int m = 8;
     s.store(m);
@@ -38,17 +26,30 @@ void pointBy(holder<int *> &s) {
 }
 
 
+void h(void) {
+    int *o = new int(3);
+    int* &a = o;
+    *o=4;
+    assert(*a == 4);
+}
+
+int f(int &no) {
+    return --no;
+}
+
+
 int main() {
     h();
 
     int n = 4;
     int &nr = n;
-    cout << f(nr);
-    cout << nr << n << endl;
+    assert(f(nr) == 3);
+    assert(nr == 3);
+    assert(n == 3);
 
     holder<int &> stash(++n);
     refBy(stash);
-    cout << "ref:" << stash.ref() << endl;
+    assert(stash.ref() == 8);
 
     holder<int *> stack(&++n);
     pointBy(stack);
