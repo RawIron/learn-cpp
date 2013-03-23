@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <assert.h>
 
 class Mystery {
     public:
@@ -23,7 +24,9 @@ void print(const Mystery &m) {
     std::cout << m.draw();
 }
 
+
 int main() {
     MysteryBox mbox;
+    assert(mbox.draw() == "shirt");
     print(mbox);
 }
