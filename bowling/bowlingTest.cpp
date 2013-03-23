@@ -10,23 +10,23 @@ class BowlingTest : public CppUnit::TestFixture {
     public:
     void setup();
     void teardown();
+    void test_finishFirstFrame();
     static CppUnit::Test *suite();
-}
+};
 
 
 void BowlingTest::setup() {
 }
 void BowlingTest::teardown() {
 }
+void BowlingTest::test_finishFirstFrame() {
+    CPPUNIT_ASSERT(true == true);
+}
 
 CppUnit::Test* BowlingTest::suite() {
     CppUnit::TestSuite* suite = new CppUnit::TestSuite("bowling");
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "read", &BowlingTest::readTest));
-    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "seek", &BowlingTest::seekTest));
-    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "meter", &BowlingTest::meterTest));
+                   "firstFrame", &BowlingTest::test_finishFirstFrame));
     return suite;
 }
 
