@@ -8,12 +8,25 @@
 
 class Bowling {
     public:
-    Bowling() : total(0) {};
-    void tookDown(int pins) { total += pins; }
-    int currentFrame() const { return total; }
+    static const int Strike = -2;
+    static const int Spare = -1;
+    Bowling() : total(0), balls(0) {};
+    void tookDown(int pins) { total += pins; ++balls; }
+    int currentFrame() const;
     private:
     int total;
+    int balls;
 };
+
+int Bowling::currentFrame() const {
+    if (balls == 1 && total == 9) {
+        return Strike;
+    } else if (balls == 2 && total == 9) {
+        return Spare;
+    } else {
+        return total;
+    }
+}
 
 
 class BowlingTest : public CppUnit::TestFixture {
@@ -39,11 +52,18 @@ void BowlingTest::test_finishFirstFrame() {
     CPPUNIT_ASSERT(b->currentFrame() == 7);
 }
 void BowlingTest::test_finishFirstFrameWithStrike() {
-    CPPUNIT_ASSERT(true == true);
+    Bowling *b = new Bowling();
+    b->tookDown(9);
+    CPPUNIT_ASSERT(b->currentFrame() == b->Strike);
 }
 void BowlingTest::test_finishFirstFrameWithSpare() {
-    CPPUNIT_ASSERT(true == true);
+    Bowling *b = new Bowling();
+    b->tookDown(3);
+    b->tookDown(6);
+    CPPUNIT_ASSERT(b->currentFrame() == b->Spare);
 }
+
+
 
 CppUnit::Test* BowlingTest::suite() {
     CppUnit::TestSuite* suite = new CppUnit::TestSuite("bowling");
@@ -55,7 +75,6 @@ CppUnit::Test* BowlingTest::suite() {
                    "firstFrame", &BowlingTest::test_finishFirstFrameWithSpare));
     return suite;
 }
-
 
 
 int main() {
