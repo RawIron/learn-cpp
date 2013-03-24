@@ -6,19 +6,22 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 
-class Bowling {
+class BowlingFrame {
     public:
     static const int Strike = -2;
     static const int Spare = -1;
-    Bowling() : total(0), balls(0) {};
-    void tookDown(int pins) { total += pins; ++balls; }
-    int currentFrame() const;
+    BowlingFrame() : total(0), balls(0) {};
+    int score() const;
+    void scored(int pins) { ++balls; total += pins; }
+    bool completed() const { return (balls == 2); }
+    void wipe() { total = 0; balls = 0; }
+
     private:
     int total;
     int balls;
 };
 
-int Bowling::currentFrame() const {
+int BowlingFrame::score() const {
     if (balls == 1 && total == 9) {
         return Strike;
     } else if (balls == 2 && total == 9) {
@@ -27,6 +30,20 @@ int Bowling::currentFrame() const {
         return total;
     }
 }
+
+class Bowling {
+    public:
+    static const int Strike = -2;
+    static const int Spare = -1;
+    Bowling() : currentFrameIs(0) { frames[0] = new BowlingFrame(); frames[1] = new BowlingFrame(); }
+    void tookDown(int pins) { frames[currentFrameIs]->scored(pins); }
+    int currentFrameCount() { return frames[currentFrameIs]->score(); }
+
+    private:
+    BowlingFrame *frames[2];
+    int currentFrameIs;
+};
+
 
 
 class BowlingTest : public CppUnit::TestFixture {
@@ -49,18 +66,18 @@ void BowlingTest::test_finishFirstFrame() {
     Bowling *b = new Bowling();
     b->tookDown(3);
     b->tookDown(4);
-    CPPUNIT_ASSERT(b->currentFrame() == 7);
+    CPPUNIT_ASSERT(b->currentFrameCount() == 7);
 }
 void BowlingTest::test_finishFirstFrameWithStrike() {
     Bowling *b = new Bowling();
     b->tookDown(9);
-    CPPUNIT_ASSERT(b->currentFrame() == b->Strike);
+    CPPUNIT_ASSERT(b->currentFrameCount() == b->Strike);
 }
 void BowlingTest::test_finishFirstFrameWithSpare() {
     Bowling *b = new Bowling();
     b->tookDown(3);
     b->tookDown(6);
-    CPPUNIT_ASSERT(b->currentFrame() == b->Spare);
+    CPPUNIT_ASSERT(b->currentFrameCount() == b->Spare);
 }
 
 
