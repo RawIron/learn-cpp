@@ -10,16 +10,26 @@ class BowlingFrame {
     public:
     static const int Strike = -2;
     static const int Spare = -1;
-    BowlingFrame() : total(0), balls(0) {};
+    BowlingFrame() : total(0), balls(0), complete(false) {};
     int score() const;
-    void scored(int pins) { ++balls; total += pins; }
-    bool completed() const { return (balls == 2); }
+    void scored(int pins) { ++balls; total += pins; isComplete(); }
+    bool completed() const { return complete; }
     void wipe() { total = 0; balls = 0; }
 
     private:
+    void isComplete();
     int total;
     int balls;
+    bool complete;
 };
+
+void BowlingFrame::isComplete() {
+    if (balls == 1 && total == 9) {
+        complete = true;
+    } else if (balls == 2) {
+        complete = true;
+    }
+}
 
 int BowlingFrame::score() const {
     if (balls == 1 && total == 9) {
@@ -31,18 +41,29 @@ int BowlingFrame::score() const {
     }
 }
 
+
 class Bowling {
     public:
     static const int Strike = -2;
     static const int Spare = -1;
     Bowling() : currentFrameIs(0) { frames[0] = new BowlingFrame(); frames[1] = new BowlingFrame(); }
-    void tookDown(int pins) { frames[currentFrameIs]->scored(pins); }
+    void tookDown(int pins);
     int currentFrameCount() { return frames[currentFrameIs]->score(); }
+    int previousFrameCount() { return frames[previousFrame()]->score(); }
 
     private:
+    int nextFrame() { return (currentFrameIs + 1) & (2-1); }
+    int previousFrame() { return (currentFrameIs - 1) & (2-1); }
     BowlingFrame *frames[2];
     int currentFrameIs;
 };
+
+void Bowling::tookDown(int pins) {
+    if (frames[currentFrameIs]->completed()) {
+        currentFrameIs = nextFrame();
+    }
+    frames[currentFrameIs]->scored(pins);
+}
 
 
 
@@ -53,6 +74,9 @@ class BowlingTest : public CppUnit::TestFixture {
     void test_finishFirstFrame();
     void test_finishFirstFrameWithStrike();
     void test_finishFirstFrameWithSpare();
+    void test_finishSecondFrame();
+    void test_finishSecondFrameAfterStrike();
+    void test_finishSecondFrameAfterSpare();
     static CppUnit::Test *suite();
 };
 
@@ -80,6 +104,33 @@ void BowlingTest::test_finishFirstFrameWithSpare() {
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Spare);
 }
 
+void BowlingTest::test_finishSecondFrame() {
+    Bowling *b = new Bowling();
+    b->tookDown(3);
+    b->tookDown(4);
+    b->tookDown(4);
+    b->tookDown(4);
+    CPPUNIT_ASSERT(b->previousFrameCount() == 7);
+    CPPUNIT_ASSERT(b->currentFrameCount() == 8);
+}
+void BowlingTest::test_finishSecondFrameAfterStrike() {
+    Bowling *b = new Bowling();
+    b->tookDown(9);
+    b->tookDown(2);
+    b->tookDown(4);
+    CPPUNIT_ASSERT(b->previousFrameCount() == 16);
+    CPPUNIT_ASSERT(b->currentFrameCount() == 22);
+}
+void BowlingTest::test_finishSecondFrameAfterSpare() {
+    Bowling *b = new Bowling();
+    b->tookDown(3);
+    b->tookDown(6);
+    b->tookDown(5);
+    b->tookDown(1);
+    CPPUNIT_ASSERT(b->previousFrameCount() == 15);
+    CPPUNIT_ASSERT(b->currentFrameCount() == 21);
+}
+
 
 
 CppUnit::Test* BowlingTest::suite() {
@@ -90,6 +141,12 @@ CppUnit::Test* BowlingTest::suite() {
                    "firstFrame", &BowlingTest::test_finishFirstFrameWithStrike));
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
                    "firstFrame", &BowlingTest::test_finishFirstFrameWithSpare));
+    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
+                   "firstFrame", &BowlingTest::test_finishSecondFrame));
+    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
+                   "firstFrame", &BowlingTest::test_finishSecondFrameAfterStrike));
+    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
+                   "firstFrame", &BowlingTest::test_finishSecondFrameAfterSpare));
     return suite;
 }
 
