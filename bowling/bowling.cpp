@@ -7,7 +7,7 @@ class RollingFrame {
     public:
     static const int Strike = -2;
     static const int Spare = -1;
-    RollingFrame() : frameIndex(0), frameTotal(0),
+    RollingFrame() : frameIndex(1), frameTotal(0),
                     gameTotal(0), balls(0), complete(false),
                     firstStrikeInSeries(false), doublesNotUsed(0) {};
     RollingFrame(const RollingFrame& rhs);
