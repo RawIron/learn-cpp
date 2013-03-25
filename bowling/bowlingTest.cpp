@@ -19,6 +19,9 @@ class BowlingTest : public CppUnit::TestFixture {
     void test_finishSecondFrame();
     void test_finishSecondFrameAfterStrike();
     void test_finishSecondFrameAfterSpare();
+    void test_finishThirdFrame();
+    void test_finishThirdFrameAfterStrike();
+    void test_finishThirdFrameAfterSpare();
     static CppUnit::Test *suite();
 };
 
@@ -45,6 +48,7 @@ void BowlingTest::test_finishFirstFrameWithSpare() {
     b->tookDown(6);
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Spare);
 }
+
 
 void BowlingTest::test_finishSecondFrame() {
     Bowling *b = new Bowling();
@@ -77,21 +81,58 @@ void BowlingTest::test_finishSecondFrameAfterSpare() {
 }
 
 
+void BowlingTest::test_finishThirdFrame() {
+    Bowling *b = new Bowling();
+    b->tookDown(3);
+    b->tookDown(4);
+    b->tookDown(4);
+    b->tookDown(4);
+    CPPUNIT_ASSERT(b->previousFrameCount() == 7);
+    CPPUNIT_ASSERT(b->currentFrameCount() == 8);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 15);
+}
+void BowlingTest::test_finishThirdFrameAfterStrike() {
+    Bowling *b = new Bowling();
+    b->tookDown(9);
+    b->tookDown(2);
+    b->tookDown(4);
+    CPPUNIT_ASSERT(b->previousFrameCount() == b->Strike);
+    CPPUNIT_ASSERT(b->currentFrameCount() == 6);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 22);
+}
+void BowlingTest::test_finishThirdFrameAfterSpare() {
+    Bowling *b = new Bowling();
+    b->tookDown(3);
+    b->tookDown(6);
+    b->tookDown(5);
+    b->tookDown(1);
+    CPPUNIT_ASSERT(b->previousFrameCount() == b->Spare);
+    CPPUNIT_ASSERT(b->currentFrameCount() == 6);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 21);
+}
+
+
 
 CppUnit::Test* BowlingTest::suite() {
     CppUnit::TestSuite* suite = new CppUnit::TestSuite("bowling");
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "firstFrame", &BowlingTest::test_finishFirstFrame));
+                   "", &BowlingTest::test_finishFirstFrame));
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "firstFrame", &BowlingTest::test_finishFirstFrameWithStrike));
+                   "", &BowlingTest::test_finishFirstFrameWithStrike));
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "firstFrame", &BowlingTest::test_finishFirstFrameWithSpare));
+                   "", &BowlingTest::test_finishFirstFrameWithSpare));
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "firstFrame", &BowlingTest::test_finishSecondFrame));
+                   "", &BowlingTest::test_finishSecondFrame));
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "firstFrame", &BowlingTest::test_finishSecondFrameAfterStrike));
+                   "", &BowlingTest::test_finishSecondFrameAfterStrike));
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
-                   "firstFrame", &BowlingTest::test_finishSecondFrameAfterSpare));
+                   "", &BowlingTest::test_finishSecondFrameAfterSpare));
+    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
+                   "", &BowlingTest::test_finishThirdFrame));
+    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
+                   "", &BowlingTest::test_finishThirdFrameAfterStrike));
+    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
+                   "", &BowlingTest::test_finishThirdFrameAfterSpare));
     return suite;
 }
 
