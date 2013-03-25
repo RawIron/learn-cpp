@@ -134,7 +134,7 @@ void BowlingTest::test_finishThirdFrameAllStrike() {
     b->knockedDown(10);
     CPPUNIT_ASSERT(b->previousFrameCount() == b->Strike);
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Strike);
-    CPPUNIT_ASSERT(b->totalFrameCount() == 50);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 60);
 }
 void BowlingTest::test_finishThirdFrameAllSpare() {
     Bowling *b = new Bowling();
