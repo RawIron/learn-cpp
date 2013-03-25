@@ -41,107 +41,107 @@ void BowlingTest::teardown() {
 
 void BowlingTest::test_finishFirstFrame() {
     Bowling *b = new Bowling();
-    b->tookDown(3); b->tookDown(4);
+    b->knockedDown(3); b->knockedDown(4);
     CPPUNIT_ASSERT(b->currentFrameCount() == 7);
 }
 void BowlingTest::test_finishFirstFrameIsStrike() {
     Bowling *b = new Bowling();
-    b->tookDown(9);
+    b->knockedDown(10);
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Strike);
 }
 void BowlingTest::test_finishFirstFrameIsSpare() {
     Bowling *b = new Bowling();
-    b->tookDown(3); b->tookDown(6);
+    b->knockedDown(4); b->knockedDown(6);
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Spare);
 }
 
 
 void BowlingTest::test_finishSecondFrame() {
     Bowling *b = new Bowling();
-    b->tookDown(3); b->tookDown(4);
-    b->tookDown(4); b->tookDown(4);
+    b->knockedDown(3); b->knockedDown(4);
+    b->knockedDown(4); b->knockedDown(4);
     CPPUNIT_ASSERT(b->previousFrameCount() == 7);
     CPPUNIT_ASSERT(b->currentFrameCount() == 8);
     CPPUNIT_ASSERT(b->totalFrameCount() == 15);
 }
 void BowlingTest::test_finishSecondFrameAfterStrike() {
     Bowling *b = new Bowling();
-    b->tookDown(9);
-    b->tookDown(2); b->tookDown(4);
+    b->knockedDown(10);
+    b->knockedDown(2); b->knockedDown(4);
     CPPUNIT_ASSERT(b->previousFrameCount() == b->Strike);
     CPPUNIT_ASSERT(b->currentFrameCount() == 6);
     CPPUNIT_ASSERT(b->totalFrameCount() == 22);
 }
 void BowlingTest::test_finishSecondFrameAfterSpare() {
     Bowling *b = new Bowling();
-    b->tookDown(3); b->tookDown(6);
-    b->tookDown(5); b->tookDown(1);
+    b->knockedDown(4); b->knockedDown(6);
+    b->knockedDown(5); b->knockedDown(1);
     CPPUNIT_ASSERT(b->previousFrameCount() == b->Spare);
     CPPUNIT_ASSERT(b->currentFrameCount() == 6);
     CPPUNIT_ASSERT(b->totalFrameCount() == 21);
 }
 void BowlingTest::test_finishSecondFrameAllStrike() {
     Bowling *b = new Bowling();
-    b->tookDown(9);
-    b->tookDown(9);
+    b->knockedDown(10);
+    b->knockedDown(10);
     CPPUNIT_ASSERT(b->previousFrameCount() == b->Strike);
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Strike);
-    CPPUNIT_ASSERT(b->totalFrameCount() == 28);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 30);
 }
 void BowlingTest::test_finishSecondFrameAllSpare() {
     Bowling *b = new Bowling();
-    b->tookDown(3); b->tookDown(6);
-    b->tookDown(2); b->tookDown(7);
+    b->knockedDown(4); b->knockedDown(6);
+    b->knockedDown(3); b->knockedDown(7);
     CPPUNIT_ASSERT(b->previousFrameCount() == b->Spare);
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Spare);
-    CPPUNIT_ASSERT(b->totalFrameCount() == 21);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 23);
 }
 
 
 void BowlingTest::test_finishThirdFrame() {
     Bowling *b = new Bowling();
-    b->tookDown(3); b->tookDown(4);
-    b->tookDown(4); b->tookDown(4);
-    b->tookDown(1); b->tookDown(2);
+    b->knockedDown(3); b->knockedDown(4);
+    b->knockedDown(4); b->knockedDown(4);
+    b->knockedDown(1); b->knockedDown(2);
     CPPUNIT_ASSERT(b->previousFrameCount() == 8);
     CPPUNIT_ASSERT(b->currentFrameCount() == 3);
     CPPUNIT_ASSERT(b->totalFrameCount() == 18);
 }
 void BowlingTest::test_finishThirdFrameAfterStrike() {
     Bowling *b = new Bowling();
-    b->tookDown(9);
-    b->tookDown(2); b->tookDown(4);
-    b->tookDown(2); b->tookDown(3);
+    b->knockedDown(10);
+    b->knockedDown(2); b->knockedDown(4);
+    b->knockedDown(2); b->knockedDown(3);
     CPPUNIT_ASSERT(b->previousFrameCount() == 6);
     CPPUNIT_ASSERT(b->currentFrameCount() == 5);
     CPPUNIT_ASSERT(b->totalFrameCount() == 27);
 }
 void BowlingTest::test_finishThirdFrameAfterSpare() {
     Bowling *b = new Bowling();
-    b->tookDown(3); b->tookDown(6);
-    b->tookDown(5); b->tookDown(1);
-    b->tookDown(1); b->tookDown(1);
+    b->knockedDown(4); b->knockedDown(6);
+    b->knockedDown(5); b->knockedDown(1);
+    b->knockedDown(1); b->knockedDown(1);
     CPPUNIT_ASSERT(b->previousFrameCount() == 6);
     CPPUNIT_ASSERT(b->currentFrameCount() == 2);
     CPPUNIT_ASSERT(b->totalFrameCount() == 23);
 }
 void BowlingTest::test_finishThirdFrameAllStrike() {
     Bowling *b = new Bowling();
-    b->tookDown(9);
-    b->tookDown(9);
-    b->tookDown(9);
+    b->knockedDown(10);
+    b->knockedDown(10);
+    b->knockedDown(10);
     CPPUNIT_ASSERT(b->previousFrameCount() == b->Strike);
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Strike);
-    CPPUNIT_ASSERT(b->totalFrameCount() == 47);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 50);
 }
 void BowlingTest::test_finishThirdFrameAllSpare() {
     Bowling *b = new Bowling();
-    b->tookDown(3); b->tookDown(6);
-    b->tookDown(2); b->tookDown(7);
-    b->tookDown(4); b->tookDown(5);
+    b->knockedDown(4); b->knockedDown(6);
+    b->knockedDown(3); b->knockedDown(7);
+    b->knockedDown(5); b->knockedDown(5);
     CPPUNIT_ASSERT(b->previousFrameCount() == b->Spare);
     CPPUNIT_ASSERT(b->currentFrameCount() == b->Spare);
-    CPPUNIT_ASSERT(b->totalFrameCount() == 35);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 38);
 }
 
 

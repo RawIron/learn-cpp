@@ -45,9 +45,9 @@ void BowlingFrame::scored(int pins) {
 }
 
 int BowlingFrame::score() const {
-    if (balls == 1 && frameTotal == 9) {
+    if (balls == 1 && frameTotal == 10) {
         return Strike;
-    } else if (balls == 2 && frameTotal == 9) {
+    } else if (balls == 2 && frameTotal == 10) {
         return Spare;
     } else {
         return frameTotal;
@@ -61,7 +61,7 @@ class Bowling {
     static const int Strike = -2;
     static const int Spare = -1;
     Bowling() : currentFrameIs(0) { initFrames(); }
-    void tookDown(int pins);
+    void knockedDown(int pins);
     int previousFrameCount() { return frames[previousFrame()]->score(); }
     int currentFrameCount() { return frames[currentFrameIs]->score(); }
     int totalFrameCount() { return frames[currentFrameIs]->gameScore(); }
@@ -79,14 +79,14 @@ void Bowling::initFrames() {
     frames[0] = new BowlingFrame();
     frames[1] = new BowlingFrame();
 }
-void Bowling::tookDown(int pins) {
+void Bowling::knockedDown(int pins) {
     if (frames[currentFrame()]->completed()) {
         frames[nextFrame()]->wipe();
         if (frames[currentFrame()]->score() == Strike) {
-            frames[nextFrame()]->previousScore((frames[currentFrame()]->gameScore())+1);
+            frames[nextFrame()]->previousScore(frames[currentFrame()]->gameScore());
             frames[nextFrame()]->doubleScored(2);
         } else if (frames[currentFrame()]->score() == Spare) {
-            frames[nextFrame()]->previousScore((frames[currentFrame()]->gameScore())+1);
+            frames[nextFrame()]->previousScore(frames[currentFrame()]->gameScore());
             frames[nextFrame()]->doubleScored(1);
         } else {
             frames[nextFrame()]->previousScore(frames[currentFrame()]->gameScore());
