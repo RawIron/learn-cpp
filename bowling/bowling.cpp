@@ -5,19 +5,22 @@ class BowlingFrame {
     public:
     static const int Strike = -2;
     static const int Spare = -1;
-    BowlingFrame() : frameTotal(0), gameTotal(0), balls(0), complete(false), firstStrikeInSeries(false), doubles(0) {};
+    BowlingFrame() : frameIndex(0), frameTotal(0), gameTotal(0), balls(0), complete(false), firstStrikeInSeries(false), doubles(0) {};
     int score() const;
-    void scored(int pins);
     bool completed() const { return complete; }
     int gameScore() const { return gameTotal; }
+    int doublesNotUsed() const { return doubles; }
+    int myFrameId() const { return frameIndex; }
+    void scored(int pins);
     void previousScore(int total) { gameTotal += total; }
-    int doublesNotUsed() { return doubles; }
+    void frameId(int id) { frameIndex = id; }
     void isFirstStrike() { firstStrikeInSeries = true; }
     void doubleNext(int upcomingBalls) { doubles = upcomingBalls; }
-    void wipe() { frameTotal = 0; gameTotal = 0; balls = 0; complete = false; firstStrikeInSeries = false; doubles = 0; }
+    void wipe() { frameIndex = 0; frameTotal = 0; gameTotal = 0; balls = 0; complete = false; firstStrikeInSeries = false; doubles = 0; }
 
     private:
     void isComplete();
+    int frameIndex;
     int frameTotal;
     int gameTotal;
     int balls;
@@ -40,15 +43,20 @@ void BowlingFrame::scored(int pins) {
     ++balls;
     frameTotal += pins;
     isComplete();
+
+    int multiplicator = 2;
+    if (frameIndex == 11) {
+        --multiplicator;
+    }
     if (doubles > 2) {
-        gameTotal += 3*pins;
+        gameTotal += (multiplicator+1)*pins;
         doubles -= 2;
     } else if (firstStrikeInSeries) {
-        gameTotal += 2*pins;
+        gameTotal += multiplicator*pins;
         --doubles;
         firstStrikeInSeries = false;
     } else if (doubles > 0) {
-        gameTotal += 2*pins;
+        gameTotal += multiplicator*pins;
         --doubles;
     } else {
         gameTotal += pins;
@@ -89,11 +97,13 @@ class Bowling {
 void Bowling::initFrames() {
     frames[0] = new BowlingFrame();
     frames[1] = new BowlingFrame();
+    frames[currentFrameIs]->frameId(1);
 }
 
 void Bowling::knockedDown(int pins) {
     if (frames[currentFrame()]->completed()) {
         frames[nextFrame()]->wipe();
+        frames[nextFrame()]->frameId((frames[currentFrame()]->myFrameId())+1);
         if (frames[currentFrame()]->score() == Strike) {
             if (frames[currentFrame()]->doublesNotUsed() == 0) {
                 frames[nextFrame()]->isFirstStrike();
