@@ -1,11 +1,12 @@
 #include <iostream>
 
+namespace bowling {
 
-class BowlingFrame {
+class RollingFrame {
     public:
     static const int Strike = -2;
     static const int Spare = -1;
-    BowlingFrame() : frameIndex(0), frameTotal(0), gameTotal(0), balls(0), complete(false), firstStrikeInSeries(false), doubles(0) {};
+    RollingFrame() : frameIndex(0), frameTotal(0), gameTotal(0), balls(0), complete(false), firstStrikeInSeries(false), doubles(0) {};
     int score() const;
     bool completed() const { return complete; }
     int gameScore() const { return gameTotal; }
@@ -29,7 +30,7 @@ class BowlingFrame {
     int doubles;
 };
 
-void BowlingFrame::isComplete() {
+void RollingFrame::isComplete() {
     if (score() == Strike) {
         complete = true;
     } else if (score() == Spare) {
@@ -39,7 +40,7 @@ void BowlingFrame::isComplete() {
     }
 }
 
-void BowlingFrame::scored(int pins) {
+void RollingFrame::scored(int pins) {
     ++balls;
     frameTotal += pins;
     isComplete();
@@ -63,7 +64,7 @@ void BowlingFrame::scored(int pins) {
     }
 }
 
-int BowlingFrame::score() const {
+int RollingFrame::score() const {
     if (balls == 1 && frameTotal == 10) {
         return Strike;
     } else if (balls == 2 && frameTotal == 10) {
@@ -74,12 +75,12 @@ int BowlingFrame::score() const {
 }
 
 
-class Bowling {
+class Game {
     public:
     static const int NoFrames = 2;
     static const int Strike = -2;
     static const int Spare = -1;
-    Bowling() : currentFrameIs(0) { initFrames(); }
+    Game() : currentFrameIs(0) { initFrames(); }
     void knockedDown(int pins);
     int previousFrameCount() { return frames[previousFrame()]->score(); }
     int currentFrameCount() { return frames[currentFrameIs]->score(); }
@@ -90,17 +91,17 @@ class Bowling {
     int currentFrame() { return currentFrameIs; }
     int nextFrame() { return (currentFrameIs + 1) & (NoFrames-1); }
     int previousFrame() { return (currentFrameIs - 1) & (NoFrames-1); }
-    BowlingFrame *frames[NoFrames];
+    RollingFrame *frames[NoFrames];
     int currentFrameIs;
 };
 
-void Bowling::initFrames() {
-    frames[0] = new BowlingFrame();
-    frames[1] = new BowlingFrame();
+void Game::initFrames() {
+    frames[0] = new RollingFrame();
+    frames[1] = new RollingFrame();
     frames[currentFrameIs]->frameId(1);
 }
 
-void Bowling::knockedDown(int pins) {
+void Game::knockedDown(int pins) {
     if (frames[currentFrame()]->completed()) {
         frames[nextFrame()]->wipe();
         frames[nextFrame()]->frameId((frames[currentFrame()]->myFrameId())+1);
@@ -122,3 +123,4 @@ void Bowling::knockedDown(int pins) {
     frames[currentFrameIs]->scored(pins);
 }
 
+}
