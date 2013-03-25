@@ -10,7 +10,7 @@ class RollingFrame {
     RollingFrame() : frameIndex(0), frameTotal(0),
                     gameTotal(0), balls(0), complete(false),
                     firstStrikeInSeries(false), doublesNotUsed(0) {};
-    RollingFrame& RollingFrame(const RollingFrame& rhs);
+    RollingFrame(const RollingFrame& rhs);
 
     int score() const;
     int gameScore() const { return gameTotal; }
@@ -29,7 +29,11 @@ class RollingFrame {
 };
 
 
-RollingFrame& RollingFrame(const RollingFrame& rhs) {
+RollingFrame::RollingFrame(const RollingFrame& rhs) :
+        frameIndex(0), frameTotal(0),
+        gameTotal(0), balls(0), complete(false),
+        firstStrikeInSeries(false), doublesNotUsed(0) {
+
     frameIndex = rhs.frameIndex+1;
     gameTotal = rhs.gameTotal;
     if (rhs.score() == Strike) {
@@ -63,16 +67,16 @@ void RollingFrame::scored(int pins) {
     if (frameIndex == 11) {
         --multiplicator;
     }
-    if (doubles > 2) {
+    if (doublesNotUsed > 2) {
         gameTotal += (multiplicator+1)*pins;
-        doubles -= 2;
+        doublesNotUsed -= 2;
     } else if (firstStrikeInSeries) {
         gameTotal += multiplicator*pins;
-        --doubles;
+        --doublesNotUsed;
         firstStrikeInSeries = false;
-    } else if (doubles > 0) {
+    } else if (doublesNotUsed > 0) {
         gameTotal += multiplicator*pins;
-        --doubles;
+        --doublesNotUsed;
     } else {
         gameTotal += pins;
     }
@@ -112,7 +116,7 @@ void Game::initFrame() {
 void Game::knockedDown(int pins) {
     if (frame->completed()) {
         previousScore = frame->score();
-        RollingFrame *temp = new RollingFrame(frame);
+        RollingFrame *temp = new RollingFrame(*frame);
         frame = temp;
     }
     frame->scored(pins);
