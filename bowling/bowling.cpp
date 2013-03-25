@@ -1,16 +1,17 @@
+#include <iostream>
 
 class BowlingFrame {
     public:
     static const int Strike = -2;
     static const int Spare = -1;
-    BowlingFrame() : frameTotal(0), gameTotal(0), balls(0), complete(false) {};
+    BowlingFrame() : frameTotal(0), gameTotal(0), balls(0), complete(false), doubles(0) {};
     int score() const;
     int gameScore() const { return gameTotal; }
     void scored(int pins);
     bool completed() const { return complete; }
     void previousScore(int total) { gameTotal += total; }
     void doubleScored(int fromPrevious) { doubles = fromPrevious; }
-    void wipe() { frameTotal = 0; gameTotal = 0; balls = 0; complete = false; }
+    void wipe() { frameTotal = 0; gameTotal = 0; balls = 0; complete = false; doubles = 0; }
 
     private:
     void isComplete();
@@ -59,7 +60,7 @@ class Bowling {
     static const int NoFrames = 2;
     static const int Strike = -2;
     static const int Spare = -1;
-    Bowling() : currentFrameIs(0), ballsBothFrames(0) { initFrames(); }
+    Bowling() : currentFrameIs(0) { initFrames(); }
     void tookDown(int pins);
     int previousFrameCount() { return frames[previousFrame()]->score(); }
     int currentFrameCount() { return frames[currentFrameIs]->score(); }
@@ -67,11 +68,11 @@ class Bowling {
 
     private:
     void initFrames();
+    int currentFrame() { return currentFrameIs; }
     int nextFrame() { return (currentFrameIs + 1) & (NoFrames-1); }
     int previousFrame() { return (currentFrameIs - 1) & (NoFrames-1); }
     BowlingFrame *frames[NoFrames];
     int currentFrameIs;
-    int ballsBothFrames;
 };
 
 void Bowling::initFrames() {
@@ -79,16 +80,16 @@ void Bowling::initFrames() {
     frames[1] = new BowlingFrame();
 }
 void Bowling::tookDown(int pins) {
-    if (frames[currentFrameIs]->completed()) {
+    if (frames[currentFrame()]->completed()) {
         frames[nextFrame()]->wipe();
-        if (frames[currentFrameIs]->score() == Strike) {
+        if (frames[currentFrame()]->score() == Strike) {
             frames[nextFrame()]->previousScore(10);
             frames[nextFrame()]->doubleScored(2);
-        } else if (frames[currentFrameIs]->score() == Spare) {
+        } else if (frames[currentFrame()]->score() == Spare) {
             frames[nextFrame()]->previousScore(10);
             frames[nextFrame()]->doubleScored(1);
         } else {
-            frames[nextFrame()]->previousScore(frames[currentFrameIs]->score());
+            frames[nextFrame()]->previousScore(frames[currentFrame()]->gameScore());
             frames[nextFrame()]->doubleScored(0);
         }
         currentFrameIs = nextFrame();
