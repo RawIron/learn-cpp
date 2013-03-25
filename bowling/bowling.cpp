@@ -1,23 +1,21 @@
 #include <iostream>
 
+
 namespace bowling {
 
 class RollingFrame {
     public:
     static const int Strike = -2;
     static const int Spare = -1;
-    RollingFrame() : frameIndex(0), frameTotal(0), gameTotal(0), balls(0), complete(false), firstStrikeInSeries(false), doubles(0) {};
+    RollingFrame() : frameIndex(0), frameTotal(0),
+                    gameTotal(0), balls(0), complete(false),
+                    firstStrikeInSeries(false), doublesNotUsed(0) {};
+    RollingFrame& RollingFrame(const RollingFrame& rhs);
+
     int score() const;
-    bool completed() const { return complete; }
     int gameScore() const { return gameTotal; }
-    int doublesNotUsed() const { return doubles; }
-    int myFrameId() const { return frameIndex; }
+    bool completed() const { return complete; }
     void scored(int pins);
-    void previousScore(int total) { gameTotal += total; }
-    void frameId(int id) { frameIndex = id; }
-    void isFirstStrike() { firstStrikeInSeries = true; }
-    void doubleNext(int upcomingBalls) { doubles = upcomingBalls; }
-    void wipe() { frameIndex = 0; frameTotal = 0; gameTotal = 0; balls = 0; complete = false; firstStrikeInSeries = false; doubles = 0; }
 
     private:
     void isComplete();
@@ -27,8 +25,24 @@ class RollingFrame {
     int balls;
     bool complete;
     bool firstStrikeInSeries;
-    int doubles;
+    int doublesNotUsed;
 };
+
+
+RollingFrame& RollingFrame(const RollingFrame& rhs) {
+    frameIndex = rhs.frameIndex+1;
+    gameTotal = rhs.gameTotal;
+    if (rhs.score() == Strike) {
+        if (rhs.doublesNotUsed == 0) {
+            firstStrikeInSeries = true;
+        }
+        doublesNotUsed = rhs.doublesNotUsed + 2;
+    } else if (rhs.score() == Spare) {
+        doublesNotUsed = rhs.doublesNotUsed + 1;
+    } else {
+        doublesNotUsed = rhs.doublesNotUsed;
+    }
+}
 
 void RollingFrame::isComplete() {
     if (score() == Strike) {
@@ -77,50 +91,31 @@ int RollingFrame::score() const {
 
 class Game {
     public:
-    static const int NoFrames = 2;
     static const int Strike = -2;
     static const int Spare = -1;
-    Game() : currentFrameIs(0) { initFrames(); }
+    Game() : previousScore(0) { initFrame(); }
     void knockedDown(int pins);
-    int previousFrameCount() { return frames[previousFrame()]->score(); }
-    int currentFrameCount() { return frames[currentFrameIs]->score(); }
-    int totalFrameCount() { return frames[currentFrameIs]->gameScore(); }
+    int previousFrameCount() { return previousScore; }
+    int currentFrameCount() { return frame->score(); }
+    int totalFrameCount() { return frame->gameScore(); }
 
     private:
-    void initFrames();
-    int currentFrame() { return currentFrameIs; }
-    int nextFrame() { return (currentFrameIs + 1) & (NoFrames-1); }
-    int previousFrame() { return (currentFrameIs - 1) & (NoFrames-1); }
-    RollingFrame *frames[NoFrames];
-    int currentFrameIs;
+    void initFrame();
+    RollingFrame *frame;
+    int previousScore;
 };
 
-void Game::initFrames() {
-    frames[0] = new RollingFrame();
-    frames[1] = new RollingFrame();
-    frames[currentFrameIs]->frameId(1);
+void Game::initFrame() {
+    frame = new RollingFrame();
 }
 
 void Game::knockedDown(int pins) {
-    if (frames[currentFrame()]->completed()) {
-        frames[nextFrame()]->wipe();
-        frames[nextFrame()]->frameId((frames[currentFrame()]->myFrameId())+1);
-        if (frames[currentFrame()]->score() == Strike) {
-            if (frames[currentFrame()]->doublesNotUsed() == 0) {
-                frames[nextFrame()]->isFirstStrike();
-            }
-            frames[nextFrame()]->previousScore(frames[currentFrame()]->gameScore());
-            frames[nextFrame()]->doubleNext((frames[currentFrame()]->doublesNotUsed())+2);
-        } else if (frames[currentFrame()]->score() == Spare) {
-            frames[nextFrame()]->previousScore(frames[currentFrame()]->gameScore());
-            frames[nextFrame()]->doubleNext((frames[currentFrame()]->doublesNotUsed())+1);
-        } else {
-            frames[nextFrame()]->previousScore(frames[currentFrame()]->gameScore());
-            frames[nextFrame()]->doubleNext((frames[currentFrame()]->doublesNotUsed())+0);
-        }
-        currentFrameIs = nextFrame();
+    if (frame->completed()) {
+        previousScore = frame->score();
+        RollingFrame *temp = new RollingFrame(frame);
+        frame = temp;
     }
-    frames[currentFrameIs]->scored(pins);
+    frame->scored(pins);
 }
 
 }

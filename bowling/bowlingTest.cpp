@@ -62,7 +62,6 @@ void BowlingTest::test_finishSecondFrame() {
     bowling::Game *b = new bowling::Game();
     b->knockedDown(3); b->knockedDown(4);
     b->knockedDown(4); b->knockedDown(4);
-    CPPUNIT_ASSERT(b->previousFrameCount() == 7);
     CPPUNIT_ASSERT(b->currentFrameCount() == 8);
     CPPUNIT_ASSERT(b->totalFrameCount() == 15);
 }
