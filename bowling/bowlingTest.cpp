@@ -30,6 +30,8 @@ class BowlingTest : public CppUnit::TestFixture {
     void test_finishThirdFrameAllStrike();
     void test_finishThirdFrameAllSpare();
 
+    void test_completeGame1();
+
     static CppUnit::Test *suite();
 };
 
@@ -145,6 +147,34 @@ void BowlingTest::test_finishThirdFrameAllSpare() {
 }
 
 
+void BowlingTest::test_completeGame1() {
+    Bowling *b = new Bowling();
+    b->knockedDown(10);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 10);
+    b->knockedDown(3); b->knockedDown(7);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 30);
+    b->knockedDown(7); b->knockedDown(2);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 46);
+    b->knockedDown(9); b->knockedDown(1);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 56);
+    b->knockedDown(10);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 76);
+    b->knockedDown(10);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 96);
+    b->knockedDown(10);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 126);
+    b->knockedDown(2); b->knockedDown(3);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 138);
+    b->knockedDown(6); b->knockedDown(4);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 148);
+    b->knockedDown(7); b->knockedDown(3);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 165);
+    b->knockedDown(3); b->knockedDown(0);
+    CPPUNIT_ASSERT(b->previousFrameCount() == b->Spare);
+    CPPUNIT_ASSERT(b->currentFrameCount() == 3);
+    CPPUNIT_ASSERT(b->totalFrameCount() == 168);
+}
+
 
 CppUnit::Test* BowlingTest::suite() {
     CppUnit::TestSuite* suite = new CppUnit::TestSuite("bowling");
@@ -176,6 +206,9 @@ CppUnit::Test* BowlingTest::suite() {
                    "", &BowlingTest::test_finishThirdFrameAllStrike));
     suite->addTest(new CppUnit::TestCaller<BowlingTest>(
                    "", &BowlingTest::test_finishThirdFrameAllSpare));
+
+    suite->addTest(new CppUnit::TestCaller<BowlingTest>(
+                   "", &BowlingTest::test_completeGame1));
 
     return suite;
 }
