@@ -83,10 +83,10 @@ void Bowling::tookDown(int pins) {
     if (frames[currentFrame()]->completed()) {
         frames[nextFrame()]->wipe();
         if (frames[currentFrame()]->score() == Strike) {
-            frames[nextFrame()]->previousScore(10);
+            frames[nextFrame()]->previousScore((frames[currentFrame()]->gameScore())+1);
             frames[nextFrame()]->doubleScored(2);
         } else if (frames[currentFrame()]->score() == Spare) {
-            frames[nextFrame()]->previousScore(10);
+            frames[nextFrame()]->previousScore((frames[currentFrame()]->gameScore())+1);
             frames[nextFrame()]->doubleScored(1);
         } else {
             frames[nextFrame()]->previousScore(frames[currentFrame()]->gameScore());
