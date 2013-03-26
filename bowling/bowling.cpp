@@ -63,10 +63,10 @@ void RollingFrame::scored(int pins) {
     frameTotal += pins;
     isComplete();
 
-    int multiplicator = 2;
     if (frameIndex == 11) {
         doublesNotUsed=0;
     }
+    const int multiplicator = 2;
     if (doublesNotUsed > 2) {
         gameTotal += (multiplicator+1)*pins;
         doublesNotUsed -= 2;
