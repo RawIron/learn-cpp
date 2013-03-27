@@ -5,7 +5,7 @@
 
 class Player {
     public:
-    explicit Player();
+    Player();
     std::string getName();
     bool levelUp();
     bool overLevel(int);

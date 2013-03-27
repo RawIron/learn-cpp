@@ -3,7 +3,7 @@
 
 class Counter {
     public:
-    explicit Counter();
+    Counter();
     int increase();
     int increase(int);
     int getCurrent();
