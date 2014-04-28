@@ -4,7 +4,7 @@ using namespace std;
 class driver {
     public:
     explicit driver() : value(3) {};
-    int show() {return value;};
+    int show() { return value; };
     private:
     int value;
 };
@@ -12,8 +12,8 @@ class driver {
 class san {
     public:
     explicit san(driver ds) : installed(ds), sector(9) {};
-    int read() {return sector;};
-    int show() {return installed.show();};
+    int read() { return sector; };
+    int show() { return installed.show(); };
     private:
     driver installed;
     int sector;
