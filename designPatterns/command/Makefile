@@ -4,5 +4,8 @@ Invoker.o:	Invoker.cpp Invoker.h
 main.o:	main.cpp Invoker.h Counter.h CountCommand.h
 	g++ -c main.cpp
 
-a.out:	main.o Invoker.o
+main:	main.o Invoker.o
 	g++ -lm main.o Invoker.o
+
+clean:
+	rm -f *.o a.out
