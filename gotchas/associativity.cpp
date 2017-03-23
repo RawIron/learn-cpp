@@ -1,3 +1,9 @@
+/**
+ * operators
+ *
+ * are first sorted according to precedence
+ * with same precedence are sorted according to associativity
+ */
 #include <iostream>
 #include <assert.h>
 
