@@ -1,8 +1,8 @@
 #include <iostream>
 
 int f(int);
-double add_f(double);
 double f(double);
+double add_f(double);
 
 int f(int p) {
     return p+1;
