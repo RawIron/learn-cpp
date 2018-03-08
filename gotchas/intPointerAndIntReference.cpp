@@ -1,5 +1,11 @@
 #include <iostream>
 
+void pp(const int before, const int y, const int r) {
+    std::cout << std::endl;
+    std::cout << before << " -> ";
+    std::cout << "(" << y << "," << r << ")" << std::endl;
+}
+
 int f(int a) {
     std::cout << "f(int)";
     a += 5;
@@ -12,35 +18,59 @@ int f(int* a) {
     return *a;
 }
 
-int g(const int &a) {
-    std::cout << "g(const int&)";
+int gc(const int& a) {
+    std::cout << "gc(const int&)";
+    return a;
+}
+
+int g(int& a) {
+    std::cout << "g(int&)";
+    a += 5;
     return a;
 }
 
 
 int main() {
     int r;
+    int before;
     int x = 1;
     int y = 2;
     int* py = &y;
     int& ry = y;
 
+    std::cout << "int -> ";
+    before = y;
     r = f(x);
-    std::cout << r << std::endl;
-    std::cout << x << std::endl;
+    pp(before, y, r);
+
+    std::cout << "int* -> ";
+    before = y;
     r = f(py);
-    std::cout << r << std::endl;
-    std::cout << y << std::endl;
+    pp(before, y, r);
+
+    std::cout << "int& -> ";
+    before = y;
     r = f(ry);
-    std::cout << r << std::endl;
-    std::cout << y << std::endl;
+    pp(before, y, r);
 
-    r = g(ry);
-    std::cout << r << std::endl;
-    std::cout << y << std::endl;
+    std::cout << "int& -> ";
+    before = y;
+    r = gc(ry);
+    pp(before, y, r);
 
+    std::cout << "int -> ";
+    before = y;
+    r = gc(y);
+    pp(before, y, r);
+
+    std::cout << "int -> ";
+    before = y;
     r = g(y);
-    std::cout << r << std::endl;
-    std::cout << y << std::endl;
+    pp(before, y, r);
+
+    std::cout << "int& -> ";
+    before = y;
+    r = g(ry);
+    pp(before, y, r);
 }
 
