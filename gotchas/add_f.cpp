@@ -21,10 +21,14 @@ double add_f(double p) {
 
 BOOST_AUTO_TEST_SUITE(overloading)
 
-BOOST_AUTO_TEST_CASE( test_is_double )
-{
+BOOST_AUTO_TEST_CASE(is_double) {
     double a = 104.8;
     BOOST_TEST(a == add_f(100.5));
+}
+
+BOOST_AUTO_TEST_CASE(is_long) {
+    long a = 104L;
+    BOOST_TEST(a <= add_f(100.5));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
