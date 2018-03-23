@@ -1,3 +1,6 @@
+#define BOOST_TEST_DYN_LINK
+#include <boost/test/unit_test.hpp>
+
 #include <vector>
 #include <iostream>
 
@@ -20,6 +23,10 @@ struct stlVector {
         printCurrent();
     }
 
+    int current() const {
+        return *it;
+    }
+
     void printCurrent() const {
         std::cout << *it << std::endl;
     }
@@ -31,10 +38,13 @@ struct stlVector {
 };
 
 
-int main() {
+BOOST_AUTO_TEST_SUITE(container)
+
+BOOST_AUTO_TEST_CASE(insert_is_current) {
     stlVector s;
     s.expectMedium();
     s.insert(4);
-    s.print();
+    BOOST_TEST(4 == s.current());
 }
 
+BOOST_AUTO_TEST_SUITE_END()
