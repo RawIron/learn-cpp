@@ -16,12 +16,3 @@ set(gotchas_SOURCES run_tests.cpp
 
 add_executable(run_tests ${gotchas_SOURCES})
 target_link_libraries(run_tests boost_unit_test_framework)
-
-
-enable_testing()
-add_test(NAME overloading_1
-         COMMAND run_tests --run_test=overloading/is_double)
-add_test(NAME overloading_2
-         COMMAND run_tests --run_test=overloading/is_long)
-add_test(NAME container_1
-         COMMAND run_tests --run_test=container/insert_is_current)

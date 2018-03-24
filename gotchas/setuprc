@@ -1,0 +1,8 @@
+apt-get install libboost-all-dev
+export BOOST_INCLUDE_DIR=/usr/include/boost
+
+mkdir build
+cd build
+cmake ..
+make run_tests
+./run_tests --report_level=short --show_progress
