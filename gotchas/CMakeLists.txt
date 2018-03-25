@@ -11,6 +11,7 @@ endif()
 
 
 set(gotchas_SOURCES run_tests.cpp
+    inheritance.cpp
     container.cpp
     add_f.cpp)
 
