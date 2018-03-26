@@ -13,7 +13,7 @@ endif()
 set(gotchas_SOURCES run_tests.cpp
     inheritance.cpp
     container.cpp
-    add_f.cpp)
+    overloading.cpp)
 
 add_executable(run_tests ${gotchas_SOURCES})
 target_link_libraries(run_tests boost_unit_test_framework)
