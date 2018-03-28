@@ -1,12 +1,14 @@
+#include "injectee.h"
+
 namespace injectee {
 
-	static int conf;
+	static std::map<std::string,std::string> conf;
 
-	int configure(int _settings) {
+	void configure(std::map<std::string,std::string> _settings) {
 		conf = _settings;
 	}
 
-	int max_count() {
-		return conf;
+	std::string max_count() {
+		return conf["max_count"];
 	}
 }

@@ -1,6 +1,9 @@
+#include <string>
+#include <map>
+
 namespace injectee {
 
-int configure(int);
-int max_count();
+void configure(std::map<std::string,std::string>);
+std::string max_count();
 
 }
