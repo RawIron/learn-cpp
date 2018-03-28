@@ -11,6 +11,8 @@ endif()
 
 
 set(gotchas_SOURCES run_tests.cpp
+    injector.cpp
+    injectee.cpp
     inheritance.cpp
     container.cpp
     overloading.cpp)

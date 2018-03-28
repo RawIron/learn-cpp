@@ -3,6 +3,8 @@ export BOOST_INCLUDE_DIR=/usr/include/boost
 
 mkdir build
 cd build
-cmake ..
+CC=clang CXX=clang++ cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS
+cp compile_commands.json ..
+
 make run_tests
 ./run_tests --report_level=short --show_progress
